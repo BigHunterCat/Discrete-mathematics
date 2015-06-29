@@ -1,0 +1,68 @@
+//Just need input you want make truth value table bit number.
+package logicAndProve;
+
+import java.util.Scanner;
+
+public class systemSpecificationExplain {
+	public static void main(String[] args){
+		Scanner input = new Scanner(System.in);
+		int userInput = input.nextInt();
+		int arrayLength = arrayLengthCount(userInput);
+		truthTableFunction(userInput);
+		input.close();
+	}
+	
+    public static int arrayLengthCount(int decimalNumberInt){
+    	int arrayLength = 0;
+    	double temp;
+    	double decimalNumber = decimalNumberInt;
+		while(decimalNumber>0){
+			decimalNumber = decimalNumber/2;
+			decimalNumber = decimalNumber*10;
+			temp = decimalNumber%10;
+			decimalNumber = (int)decimalNumber/10;
+			arrayLength++;
+		}
+    	return arrayLength;
+    }
+	
+	public static int[] hexChange(int decimalNumber,int[] hex){
+		double decimalNumberDouble = decimalNumber,temp;
+		for(int i=hex.length-1;i>=0;i--){
+			decimalNumberDouble = decimalNumberDouble/2;
+			decimalNumberDouble = decimalNumberDouble*10;
+			temp = decimalNumberDouble%10;
+			decimalNumberDouble = (int)decimalNumberDouble/10;
+			if(temp>0){
+				hex[i] = 1;
+			}else{
+				hex[i] = 0;
+			}
+		}
+		
+		return hex;
+	}
+
+	public static int[][] truthTableFunction(int size){
+		int column = 1;
+		for(int i=0;i<size;i++){
+			column *= 2;
+		}
+		//System.out.println(column);
+		int[][] truthTable = new int[column][size];
+		int[] temp = new int[size];
+		for(int i=0;i<column;i++){
+			temp = hexChange(i,temp);
+			for(int s=size-1;s>=0;s--){
+				 truthTable[i][s] = temp[s];
+			}
+		}
+		
+		for(int i=0;i<column;i++){
+			for(int c=0;c<size;c++){
+				System.out.print(truthTable[i][c]);
+			}
+			System.out.println(" ");
+		}
+		return truthTable;
+	}
