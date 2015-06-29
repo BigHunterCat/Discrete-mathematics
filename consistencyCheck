@@ -1,0 +1,252 @@
+//By combining the logic function, the function can be detected at the same time by 1
+package logicAndProve;
+
+import java.util.Scanner;
+
+public class systemSpecificationExplain {
+	public static void main(String[] args){
+		Scanner input = new Scanner(System.in);
+		int userInput = input.nextInt();
+		int arrayLength = arrayLengthCount(userInput);
+		int[] temp = new int[2];
+		temp = matrixMake(userInput);
+		int[][] saveTruthTable = new int[temp[0]][temp[1]];
+		saveTruthTable = truthTableFunction(userInput);
+		/*for(int i=0;i<temp[0];i++){
+			for(int c=0;c<temp[1];c++){
+				System.out.print(saveTruthTable[i][c]);
+			}
+			System.out.println(" ");
+		}*/
+		logicAndProve(saveTruthTable,temp);
+		input.close();
+	}
+	
+	public static void logicAndProve(int[][] truthVauleTable,int[] size){
+		int[] temp = new int[size[0]];
+		for(int c=0;c<size[0];c++){
+			int t = 0;
+			temp[t] = disjunctive(truthVauleTable[c][0],truthVauleTable[c][1],0);		t++;
+			temp[t] = inverse(truthVauleTable[c][0]);		t++;
+			temp[t] = imply(truthVauleTable[c][0],truthVauleTable[c][1],0);
+			int count = 0;
+			for(int i=0;i<t;i++){;
+				if(temp[i]==1){
+					count++;
+				  }
+				}
+
+			if(count==t){
+				System.out.println("a:"+truthVauleTable[c][0]+"and b:"+truthVauleTable[c][1]+"time.\n"+"Have consistency.");
+			}
+		}
+	}
+	
+    //与   and
+	public static int conjunction(int left,int right,int inverse_able_1){
+		int result = 3;
+		if(left!=right){
+			result = 0;
+		}
+		
+		if(left==0){
+			if(left==right){
+				result = 0;
+			}
+		}
+		
+		if(right==0){
+			if(left==right){
+				result = 0;
+			}
+		}
+		
+		if(left==1){
+			if(left==right){
+				result = 1;
+			}
+		}
+		
+		if(right==1){
+			if(left==right){
+				result = 1;
+			}
+		}
+		if(inverse_able_1 == 1){
+			if(result == 1){
+				result = 0;
+			}else{
+				result = 1;
+			}
+		}
+		return result;
+	}
+    //或   or
+	public static int disjunctive(int left,int right,int inverse_able_1){
+		int result = 3;
+		if(left!=right){
+			result = 1;
+		}
+		
+		if(left==1){
+			if(left==right){
+				result = 1;
+			}
+		}
+		
+		if(right==1){
+			if(left==right){
+				result = 1;
+			}
+		}
+
+		if(left==0){
+			if(left==right){
+				result = 0;
+			}
+		}
+
+		if(right==0){
+			if(left==right){
+				result = 0;
+			}
+		}
+		if(inverse_able_1 == 1){
+			if(result == 1){
+				result = 0;
+			}else{
+				result = 1;
+			}
+		}
+		return result;
+	}
+	//蕴含  ->
+	public static int imply(int left,int right,int inverse_able_1){
+		int result = 3;
+		if(right==1){
+			result = 1;
+		}
+		
+		
+		if(right==0){
+			if(left==0){
+				result = 1;
+			}
+		}
+		
+		
+		if(right==0){
+			if(left==1){
+				result = 0;
+			}
+		}
+		if(inverse_able_1 == 1){
+			if(result == 1){
+				result = 0;
+			}else{
+				result = 1;
+			}
+		}
+		return result;
+	}
+	//双蕴含  <->
+	public static int doubleImply(int left,int right,int inverse_able_1){
+		int result = 3;
+		if(left==right){
+			result = 1;
+		}
+		
+		
+		if(left!=right){
+			result = 0;
+		}
+		if(inverse_able_1 == 1){
+			if(result == 1){
+				result = 0;
+			}else{
+				result = 1;
+			}
+		}
+		return result;
+	}
+	//非  if(a==0) a=1;if(a==1) a=0;
+	public static int inverse(int i){
+		if(i==1){
+			i=0;
+		}else{
+			i=1;
+		}
+		
+		return i;
+	}
+	
+	public static int[] matrixMake(int size){
+		int column = 1;
+		for(int i=0;i<size;i++){
+			column *= 2;
+		}
+		int[] matrixSize = new int[2];
+		matrixSize[0] = column;
+		matrixSize[1] = size;
+		return matrixSize;
+	}
+
+	public static int[][] truthTableFunction(int size){
+		int column = 1;
+		for(int i=0;i<size;i++){
+			column *= 2;
+		}
+		//System.out.println(column);
+		int[][] truthTable = new int[column][size];
+		int[] temp = new int[size];
+		for(int i=0;i<column;i++){
+			temp = hexChange(i,temp);
+			for(int s=size-1;s>=0;s--){
+				 truthTable[i][s] = temp[s];
+			}
+		}
+		
+		/*for(int i=0;i<column;i++){
+			for(int c=0;c<size;c++){
+				System.out.print(truthTable[i][c]);
+			}
+			System.out.println(" ");
+		}*/
+		return truthTable;
+	}
+	
+	public static int arrayLengthCount(int decimalNumberInt){
+    	int arrayLength = 0;
+    	double temp;
+    	double decimalNumber = decimalNumberInt;
+		while(decimalNumber>0){
+			decimalNumber = decimalNumber/2;
+			decimalNumber = decimalNumber*10;
+			temp = decimalNumber%10;
+			decimalNumber = (int)decimalNumber/10;
+			arrayLength++;
+		}
+    	return arrayLength;
+    }
+	
+	public static int[] hexChange(int decimalNumber,int[] hex){
+		double decimalNumberDouble = decimalNumber,temp;
+		for(int i=hex.length-1;i>=0;i--){
+			decimalNumberDouble = decimalNumberDouble/2;
+			decimalNumberDouble = decimalNumberDouble*10;
+			temp = decimalNumberDouble%10;
+			decimalNumberDouble = (int)decimalNumberDouble/10;
+			if(temp>0){
+				hex[i] = 1;
+			}else{
+				hex[i] = 0;
+			}
+		}
+		
+		return hex;
+	}
+
+}
+
+
+
